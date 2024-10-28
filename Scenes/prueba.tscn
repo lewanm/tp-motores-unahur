@@ -1,0 +1,75 @@
+[gd_scene load_steps=3 format=3 uid="uid://dmat0kbqy3dpf"]
+
+[ext_resource type="Script" path="res://Scripts/prueba.gd" id="1_3423y"]
+[ext_resource type="Script" path="res://Scripts/chat_ui.gd" id="2_ngcvv"]
+
+[node name="Prueba" type="Node"]
+script = ExtResource("1_3423y")
+
+[node name="GridContainer" type="GridContainer" parent="."]
+offset_right = 196.0
+offset_bottom = 70.0
+columns = 2
+
+[node name="host" type="Button" parent="GridContainer"]
+layout_mode = 2
+text = "HOST"
+
+[node name="spacer" type="Control" parent="GridContainer"]
+layout_mode = 2
+
+[node name="join" type="Button" parent="GridContainer"]
+layout_mode = 2
+text = "JOIN"
+
+[node name="IP" type="LineEdit" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "IP"
+
+[node name="ChatUI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+script = ExtResource("2_ngcvv")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ChatUI"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -317.0
+offset_top = -144.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="PanelContainer" type="PanelContainer" parent="ChatUI/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ChatDisplay" type="RichTextLabel" parent="ChatUI/VBoxContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ChatUI/VBoxContainer"]
+layout_mode = 2
+
+[node name="InputField" type="LineEdit" parent="ChatUI/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="ChatUI/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Enviar"
+
+[connection signal="pressed" from="GridContainer/host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="GridContainer/join" to="." method="_on_join_pressed"]
+[connection signal="pressed" from="ChatUI/VBoxContainer/HBoxContainer/Button" to="ChatUI" method="_on_button_pressed"]

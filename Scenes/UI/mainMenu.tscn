@@ -1,0 +1,60 @@
+[gd_scene load_steps=2 format=3 uid="uid://bukbalq75aj5w"]
+
+[ext_resource type="Script" path="res://Scripts/UI/main_menu.gd" id="1_bndmk"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_bndmk")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+
+[node name="GameName" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Nombre del Juego"
+
+[node name="Local" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Local"
+
+[node name="Online" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Online"
+
+[node name="Exit" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Salir"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="PlayerIcon" type="TextureRect" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="PlayerName" type="Label" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Lewan"
+
+[node name="Config" type="Button" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Configurar"
+
+[connection signal="pressed" from="CenterContainer/VBoxContainer/Local" to="." method="_on_local_pressed"]
