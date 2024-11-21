@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://dmat0kbqy3dpf"]
 
-[ext_resource type="Script" path="res://Scripts/prueba.gd" id="1_3423y"]
+[ext_resource type="Script" path="res://Scripts/conexiones.gd" id="1_3423y"]
 [ext_resource type="Script" path="res://Scripts/chat_ui.gd" id="2_ngcvv"]
 
 [node name="Prueba" type="Node"]

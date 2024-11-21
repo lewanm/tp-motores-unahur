@@ -16,10 +16,9 @@ func _on_text_submitted(text: String):
 	if text.strip_edges(true,true) == "": #Para envitar que se envien mensajes vacios
 		return
 	
+	#Enviar el mensaje localmente y sincronizarlo.
 	self.send_chat_message(text)
-	
 	rpc("send_chat_message", text)
-	
 	input_field.text = ""
 
 func _on_button_pressed():
