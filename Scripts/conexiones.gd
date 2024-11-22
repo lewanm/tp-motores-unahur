@@ -22,6 +22,9 @@ func _ready():
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 
+func _input(event):
+	if event.is_action_pressed("my_ui_accept"):
+		prueba()
 # Crear el servidor
 func create_server(port):
 	var result = peer.create_server(port)
@@ -61,30 +64,46 @@ func _on_peer_connected(id: int):
 	
 	emit_signal("player_connected", id, user_names[id])
 	print("Se conectó el jugador {name} ({id})".format({"name":user_names[id], "id":id}))
+	
 	rpc("broadcast_player_name", id, user_names[id])
+	
+	if multiplayer.is_server():
+		rpc_id(id, "sync_player_list", user_names)
 
 func _on_peer_disconnected(id: int):
-	print("El jugador {id} se desconectó.".format({"id":id}))
 	user_names.erase(id)
-	if id == multiplayer.get_unique_id():
-		print("Te has desconectado del servidor.")
+	print("El jugador {id} se desconectó.".format({"id":id}))
+	
+	if multiplayer.is_server():
+		for peer_id in multiplayer.get_peers():
+			rpc_id(peer_id, "sync_player_list", user_names)
 
 # Validar dirección IP
 func is_valid_ip(server_ip: String) -> bool:
 	return server_ip.is_valid_ip_address()
 
-@rpc("authority")
+@rpc("any_peer")
 func broadcast_player_name(id: int, player_name: String):
 	if multiplayer.is_server():
+		user_names[id] = player_name
+		
 		for peer_id in multiplayer.get_peers():
 			if peer_id != id:
 				rpc_id(peer_id, "update_player_name", id, player_name)
+				
+		for peer_id in multiplayer.get_peers():
+			rpc_id(peer_id, "sync_player_list", user_names)
 	else:
 		print("El jugador con id {id} se llama {player_name}".format({"id":id, "player_name":player_name}))
 
 @rpc("any_peer")
 func update_player_name(id: int, player_name: String):
 	print("El jugador con ID ", id, " se llama ", player_name)
+
+@rpc("any_peer")
+func sync_player_list(player_list: Dictionary):
+	user_names = player_list  # Sincronizar la lista completa de jugadores
+	print("Lista de jugadores sincronizada: ", user_names)
 
 # Botones
 func _on_host_pressed():
@@ -98,6 +117,9 @@ func _on_join_pressed():
 		return
 	connect_to_server(_ip, PORT)
 	toggle_ui_on_connection(true)
+
+func prueba():
+	print(user_names)
 
 # Alternar la visibilidad (TEMPORAL)
 func toggle_ui_on_connection(state: bool):
