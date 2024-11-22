@@ -50,10 +50,9 @@ func connect_to_server(server_ip: String, port: int):
 
 func _on_peer_connected(id: int):
 	if multiplayer.is_server():
-		var player_name = "Jugador_{id}".format({"id": id})
-		user_names[id] = player_name
-		emit_signal("player_connected", id, player_name)
-		print("Se conectó el jugador {name} ({id})".format({"name": player_name, "id": id}))
+		#nombre generico hasta que lo cambie el servidor por el enviado por el cliente.
+		user_names[id] = "Jugador_{id}".format({"id": id})
+		print("Cliente conectado con ID:", id)
 		rpc("sync_player_list", user_names)
 	else:
 		print("Cliente: Peer conectado con ID: ", id)
@@ -65,7 +64,15 @@ func _on_peer_disconnected(id: int):
 func sync_player_list(updated_user_names: Dictionary):
 	user_names = updated_user_names  # Sincronizar la lista completa de jugadores
 	print("Se sincroniza correctamente la lista: ", updated_user_names)
-	
+
+@rpc("any_peer")
+func register_player_name(id: int, player_name):
+	if multiplayer.is_server():
+		user_names[id] = player_name
+		emit_signal("player_connected", id , player_name)
+		print("El jugador {name} ({id}) se registró.".format({"name": player_name, "id": id}))
+		# Sincronizar la lista de usuarios con todos los clientes
+		rpc("sync_player_list", user_names)
 
 func is_valid_ip(server_ip: String) -> bool:
 	return server_ip.is_valid_ip_address()
@@ -76,12 +83,20 @@ func _on_host_pressed():
 	toggle_ui_on_connection(true)
 
 func _on_join_pressed():
+	var player_name = name_input.text.strip_edges()
+	if player_name == "":
+		player_name = "Jugador_{id}".format({"id": multiplayer.get_unique_id()})  # Nombre por defecto
+	
 	var _ip = ip.text.strip_edges() if ip.text != "" else DEFAULT_IP
 	if !is_valid_ip(_ip):
 		print("Dirección IP inválida:", _ip)
 		return
-		
+	
 	connect_to_server(_ip, PORT)
+	
+	# Esperar hasta que se establezca la conexión antes de enviar el nombre
+	await multiplayer.connected_to_server
+	rpc_id(1, "register_player_name", multiplayer.get_unique_id(), player_name)
 	toggle_ui_on_connection(true)
 
 # Alternar la visibilidad (TEMPORAL)
