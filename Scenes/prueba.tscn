@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://Scripts/conexiones.gd" id="1_3423y"]
 [ext_resource type="Script" path="res://Scripts/chat_ui.gd" id="2_ngcvv"]
 
-[node name="Prueba" type="Node"]
+[node name="Conexiones" type="Node"]
 script = ExtResource("1_3423y")
 
 [node name="GridContainer" type="GridContainer" parent="."]
@@ -26,6 +26,10 @@ text = "JOIN"
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "IP"
+
+[node name="NameInput" type="LineEdit" parent="GridContainer"]
+layout_mode = 2
+placeholder_text = "nombre"
 
 [node name="ChatUI" type="Control" parent="."]
 layout_mode = 3
