@@ -1,10 +1,10 @@
 [gd_scene load_steps=3 format=3 uid="uid://dmat0kbqy3dpf"]
 
-[ext_resource type="Script" path="res://Scripts/conexiones.gd" id="1_3423y"]
-[ext_resource type="PackedScene" uid="uid://ryw6brtbp7rv" path="res://Scenes/UI/localLobby.tscn" id="2_7hdqu"]
+[ext_resource type="Script" path="res://Scripts/conexiones.gd" id="1_nfjvn"]
+[ext_resource type="PackedScene" uid="uid://ryw6brtbp7rv" path="res://Scenes/UI/localLobby.tscn" id="2_5gw5p"]
 
 [node name="Conexiones" type="Node"]
-script = ExtResource("1_3423y")
+script = ExtResource("1_nfjvn")
 
 [node name="GridContainer" type="GridContainer" parent="."]
 offset_right = 196.0
@@ -31,7 +31,7 @@ placeholder_text = "IP"
 layout_mode = 2
 placeholder_text = "nombre"
 
-[node name="LocalLobby" parent="." instance=ExtResource("2_7hdqu")]
+[node name="Lobby" parent="." instance=ExtResource("2_5gw5p")]
 
 [connection signal="pressed" from="GridContainer/host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="GridContainer/join" to="." method="_on_join_pressed"]
