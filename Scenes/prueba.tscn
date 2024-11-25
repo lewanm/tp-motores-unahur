@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://Scripts/conexiones.gd" id="1_3423y"]
 [ext_resource type="PackedScene" uid="uid://ryw6brtbp7rv" path="res://Scenes/UI/localLobby.tscn" id="2_7hdqu"]
 
-[node name="Conexiones" type="Node"]
+[node name="Conexiones" type="Node" groups=["conexiones"]]
 script = ExtResource("1_3423y")
 
 [node name="GridContainer" type="GridContainer" parent="."]

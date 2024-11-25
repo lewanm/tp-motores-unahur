@@ -2,8 +2,10 @@ extends Control
 
 @onready var chat_display = $ChatContainer/PanelContainer/ChatDisplay
 @onready var input_field = $ChatContainer/HBoxContainer/InputField
-@onready var conexiones = get_node("/root/Conexiones") #cambiar esto despues por señales
-@onready var player_info_label = $PlayerInfo
+@onready var conexiones = get_tree().get_nodes_in_group("conexiones")[0]
+@onready var start_game = $StartGame
+
+var player_scene = load("res://Scenes/Player.tscn")
 
 var player_name = ""
 var user_names = {}
@@ -13,21 +15,23 @@ func _ready():
 	input_field.connect("text_submitted", Callable(self,"_on_text_submitted"))
 	self.hide()
 
-func _input(event):
-	if event.is_action_pressed("ui_accept"):
-		print(user_names)
+
 
 func _on_player_name_assigned(updated_user_names: Dictionary):
-	self.player_name = updated_user_names.get(multiplayer.get_unique_id(), "Jugador Desconocido")
+	if multiplayer.is_server():
+		print("Soy el server")
+	else:
+		print("Soy el cliente")
+	print("Updated user names: ", updated_user_names)
+	self.player_name = updated_user_names.get(multiplayer.get_unique_id(), "Desconocido")
 	self.user_names = updated_user_names
-	#player_info_label.text = self.player_name
 	self.update_player_labels()
-	#print("Nombre del jugador actualizado en el chat: ", player_name)
 
 func update_player_labels():
-	#print("update_player_labels llamado. Usuarios:", user_names)
+	print("update_player_labels llamado. Usuarios:", user_names)
 	var players_container = $PlayersContainer/GridContainer
 	var children = players_container.get_children()
+	print("Nodos en players_container: ", children.size())
 	
 	var index = 0
 	for id in user_names.keys():
@@ -36,7 +40,7 @@ func update_player_labels():
 		
 		if children[index] is Label:
 			children[index].text = user_names[id]
-			print("Etiqueta actualizada en índice", index, ":", user_names[id])
+			print("Etiqueta actualizada en índice ", index, ":", user_names[id])
 		index += 1
 	
 	while index < children.size():
@@ -57,10 +61,25 @@ func _on_text_submitted(text: String):
 	rpc("send_chat_message",player_name, text)
 	input_field.text = ""
 
-func _on_button_pressed():
-	self._on_text_submitted(input_field.text)
-
 
 func _on_back_button_pressed():
 	
 	conexiones.toggle_ui_on_connection(false)
+
+
+func _on_button_button_up():
+	self._on_text_submitted(input_field.text)
+
+@rpc("any_peer")
+func load_game_scene():
+	if not multiplayer.is_server():
+		get_tree().change_scene_to_file("res://Scenes/Game/game_scene.tscn")
+
+func _on_start_game_pressed():
+	if not multiplayer.is_server():
+		self.send_chat_message("Juego","Solo el host puede iniciar.")
+		return
+	
+	rpc("load_game_scene")
+
+	get_tree().change_scene_to_file("res://Scenes/Game/game_scene.tscn")

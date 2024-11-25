@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3 uid="uid://dk7a520xbggpr"]
+
+[ext_resource type="PackedScene" uid="uid://dmat0kbqy3dpf" path="res://Scenes/prueba.tscn" id="1_suyap"]
+[ext_resource type="Script" path="res://Scripts/game_scene.gd" id="1_ybw1m"]
+[ext_resource type="PackedScene" uid="uid://cptaqo4h286hf" path="res://Scenes/Player.tscn" id="2_c8ioc"]
+
+[node name="Game" type="Node2D" groups=["game"]]
+script = ExtResource("1_ybw1m")
+player_scene = ExtResource("2_c8ioc")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Conexiones" parent="CanvasLayer" instance=ExtResource("1_suyap")]

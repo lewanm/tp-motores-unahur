@@ -43,6 +43,16 @@ func connect_to_server(server_ip: String, port: int):
 	if result == OK:
 		multiplayer.multiplayer_peer = peer
 		emit_signal("client_connected")
+		
+		var player_name = name_input.text.strip_edges()
+		if player_name == "":
+			player_name = "Jugador_{id}".format({"id": str(multiplayer.get_unique_id()).substr(0, 3)})  # Nombre por defecto
+		
+		await multiplayer.connected_to_server
+		var server_id = 1
+		if multiplayer.get_unique_id() != server_id: #1 = el servidor
+			rpc_id(server_id, "register_player_name", multiplayer.get_unique_id(), player_name)
+		
 		print("Conectado al servidor en IP:", server_ip, " y puerto:", port)
 	else:
 		print("Error al conectarse al servidor. Código de error:", result)
@@ -50,12 +60,8 @@ func connect_to_server(server_ip: String, port: int):
 func _on_peer_connected(id: int):
 	if multiplayer.is_server():
 		#nombre generico hasta que lo cambie el servidor por el enviado por el cliente.
-
-		
 		user_names[id] = "Jugador_{id}".format({"id": id})
 		emit_signal("player_connected", id, user_names[id])
-		
-		rpc("sync_player_list", user_names)
 	else:
 		print("Cliente: Peer conectado con ID: ", id)
 
@@ -65,7 +71,7 @@ func _on_peer_disconnected(id: int):
 
 @rpc("any_peer")
 func sync_player_list(updated_user_names: Dictionary):
-	user_names = updated_user_names  # Sincronizar la lista completa de jugadores
+	user_names = updated_user_names  
 	emit_signal("player_list_updated", user_names)
 
 @rpc("any_peer")
@@ -78,7 +84,6 @@ func register_player_name(id: int, player_name):
 func is_valid_ip(server_ip: String) -> bool:
 	return server_ip.is_valid_ip_address()
 
-# Botones
 func _on_host_pressed():
 	create_server(PORT)
 	toggle_ui_on_connection(true)
@@ -90,17 +95,6 @@ func _on_join_pressed():
 		return
 	
 	connect_to_server(_ip, PORT)
-	
-	var player_name = name_input.text.strip_edges()
-	if player_name == "":
-		player_name = "Jugador_{id}".format({"id": str(multiplayer.get_unique_id()).substr(0, 3)})  # Nombre por defecto
-	
-	await multiplayer.connected_to_server
-	var server_id = 1
-	if multiplayer.get_unique_id() != server_id: #1 = el servidor
-	# Esperar hasta que se establezca la conexión antes de enviar el nombre
-		rpc_id(server_id, "register_player_name", multiplayer.get_unique_id(), player_name)
-	
 	toggle_ui_on_connection(true)
 
 # Alternar la visibilidad (TEMPORAL)

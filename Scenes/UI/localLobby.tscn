@@ -45,28 +45,6 @@ size_flags_horizontal = 3
 layout_mode = 2
 text = "Enviar"
 
-[node name="BackButton" type="Button" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_top = -31.0
-offset_right = 57.0
-grow_vertical = 0
-text = "Volver"
-
-[node name="PlayerInfo" type="Label" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -44.0
-offset_bottom = 23.0
-grow_horizontal = 0
-text = "{player_name}"
-
 [node name="PlayersContainer" type="PanelContainer" parent="."]
 layout_mode = 0
 offset_right = 402.0
@@ -118,4 +96,15 @@ size_flags_vertical = 6
 text = "Nombre"
 horizontal_alignment = 1
 
-[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
+[node name="StartGame" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -169.0
+offset_bottom = 157.0
+grow_horizontal = 0
+text = "Empezar"
+
+[connection signal="button_up" from="ChatContainer/HBoxContainer/Button" to="." method="_on_button_button_up"]
+[connection signal="pressed" from="StartGame" to="." method="_on_start_game_pressed"]
