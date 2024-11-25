@@ -13,11 +13,13 @@ func _ready():
 
 @rpc("any_peer")
 func _create_player_for_peer(peer_id):
+	
+		
 	var player = player_scene.instantiate()
-	add_child(player)
-	player.name = "Player_{id}".format({"id" : peer_id})
+	player.name = "Player_{id}".format({"id": peer_id})
 	
 	player.position = Vector2(100  , 100)
+	add_child(player, true)
 	
 	if peer_id == multiplayer.get_unique_id():
 		player.set_physics_process(true)

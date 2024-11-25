@@ -2,7 +2,12 @@ extends CharacterBody2D
 
 @export var speed: float = 200.0
 
+func _enter_tree():
+	set_multiplayer_authority(name.to_int())
+
 func _process(_delta):
+	if !is_multiplayer_authority(): return
+	
 	var input_direction = Vector2.ZERO
 	
 	if Input.is_action_pressed("ui_right"):
