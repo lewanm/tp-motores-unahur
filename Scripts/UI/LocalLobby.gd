@@ -72,8 +72,7 @@ func _on_button_button_up():
 
 @rpc("any_peer")
 func load_game_scene():
-	if not multiplayer.is_server():
-		get_tree().change_scene_to_file("res://Scenes/Game/game_scene.tscn")
+	get_tree().change_scene_to_file("res://Scenes/Game/game_scene.tscn")
 
 func _on_start_game_pressed():
 	if not multiplayer.is_server():
@@ -82,4 +81,6 @@ func _on_start_game_pressed():
 	
 	rpc("load_game_scene")
 
+	await get_tree().create_timer(0.1).timeout
+	
 	get_tree().change_scene_to_file("res://Scenes/Game/game_scene.tscn")
